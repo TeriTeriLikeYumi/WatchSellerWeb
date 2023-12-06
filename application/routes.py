@@ -1,6 +1,3 @@
-import os
-import re
-import io
 import zlib
 from werkzeug.utils import secure_filename
 from flask import Response
@@ -23,7 +20,10 @@ from datetime import datetime
 import face_recognition
 from PIL import Image
 from base64 import b64encode, b64decode
-import re
+
+
+from flask import redirect, render_template, request, session
+from functools import wraps
 
 from helpers import apology, login_required
 
@@ -55,7 +55,6 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///data.db")
-
 
 @app.route("/")
 @login_required
@@ -272,7 +271,6 @@ def facesetup():
 
     else:
         return render_template("face.html")
-
 
 def errorhandler(e):
     """Handle error"""
