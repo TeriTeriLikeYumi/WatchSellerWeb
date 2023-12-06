@@ -1,20 +1,11 @@
 import zlib
 from werkzeug.utils import secure_filename
-from flask import Response
+from flask import Response, Flask,flash
 from cs50 import SQL
-from flask import (
-    Flask,
-    flash,
-    jsonify,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+
 from flask_session import Session
 from tempfile import mkdtemp
-from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
+from werkzeug.exceptions import InternalServerError, NotFound, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 import face_recognition
@@ -59,7 +50,7 @@ db = SQL("sqlite:///data.db")
 @app.route("/")
 @login_required
 def home():
-    return redirect("/home")
+    return render_template("face.html")
 
 
 @app.route("/home")
@@ -272,16 +263,13 @@ def facesetup():
     else:
         return render_template("face.html")
 
-def errorhandler(e):
-    """Handle error"""
-    if not isinstance(e, HTTPException):
-        e = InternalServerError()
+@app.errorhandler(InternalServerError)
+def handle_internal_server_error(e):
     return render_template("error.html", e=e)
 
-
-# Listen for errors
-for code in default_exceptions:
-    app.errorhandler(code)(errorhandler)
+@app.errorhandler(NotFound)
+def handle_not_found_error(e):
+    return render_template("error.html", e=e)
 
 if __name__ == "__main__":
     app.run()
