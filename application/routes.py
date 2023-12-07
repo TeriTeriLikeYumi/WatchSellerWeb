@@ -1,19 +1,16 @@
 import zlib
 from werkzeug.utils import secure_filename
-from flask import Response, Flask,flash
+from flask import Response, Flask, flash
+from flask import redirect, render_template, request, session
 from cs50 import SQL
 
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import InternalServerError, NotFound, HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import datetime
 import face_recognition
-from PIL import Image
 from base64 import b64encode, b64decode
 
-
-from flask import redirect, render_template, request, session
 from functools import wraps
 
 from helpers import apology, login_required
@@ -33,10 +30,6 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
-
-
-# Custom filter
-
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -172,7 +165,6 @@ def register():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
-
 
 @app.route("/facereg", methods=["GET", "POST"])
 def facereg():
