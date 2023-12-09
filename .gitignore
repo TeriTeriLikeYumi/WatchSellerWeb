@@ -1,6 +1,5 @@
 static/face/*.jpg
 static/face/unknown/*.jpg
 application/__pycache__/*
-.venv/*
-.env
+
 ```
