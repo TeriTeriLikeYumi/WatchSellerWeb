@@ -1,16 +1,15 @@
-import os,datetime
-from flask import (Flask, Blueprint, abort,
+from flask import (Blueprint, abort,
                    render_template,redirect, current_app,
                    url_for, flash, request,session)
 from flask_login import (login_user, current_user,
                          logout_user, login_required)
-from jinja2 import TemplateNotFound
 
 from libs.User import User
 
 notes_app = Blueprint('notes_app', __name__,template_folder='templates')
 
 @notes_app.route('/')
+@login_required
 def index():
     if 'username' in session:
         return redirect('/home')

@@ -1,13 +1,11 @@
-from flask import (Blueprint,
-                   render_template,redirect, 
-                   current_app, flash, request)
+from flask import (Blueprint, render_template,redirect, 
+                   flash, request, url_for)
 
 from flask_login import login_user, logout_user, login_required
 
 from libs.User import User
-from .forms import RegisterForm, LoginForm
-from .app import flask_bcrypt,login_manager
-from flask import request, render_template, redirect, flash, current_app
+from libs.forms import RegisterForm, LoginForm
+from app import flask_bcrypt,login_manager
 
 auth_app = Blueprint('auth_app', __name__,template_folder='templates')
 
@@ -18,6 +16,7 @@ def login():
         user = auth_app.config['USERS_COLLECTION'].find_one({'username': form.username.data})
         if user and User.validate_login(user['password'], form.password.data):
             user_obj = User(user['username'])
+            
             login_user(user_obj)
             flash('Logged in successfully.', 'success')
             return redirect("/home")
@@ -52,3 +51,10 @@ def register():
         # Redirect to login page
         return redirect("/login")
     return render_template('register.html', form=form, current_page='register')
+
+@login_manager.user_loader
+def load_user(username):
+    u = auth_app.config['USERS_COLLECTION'].find_one({'username': username})
+    if not u:
+        return None
+    return User(u['username'])

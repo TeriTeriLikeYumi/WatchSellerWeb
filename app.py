@@ -1,6 +1,4 @@
-import os
-
-from flask import Flask, render_template, request, redirect
+from flask import Flask
 
 from flask_login import LoginManager
 from flask_pymongo import PyMongo
@@ -24,3 +22,4 @@ flask_bcrypt = Bcrypt(app)
 # ASSOCIATE FLASK-LOGIN WITH FLASK APP
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'auth_app.login'
